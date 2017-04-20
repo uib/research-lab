@@ -1,0 +1,25 @@
+- name: Enable Dmesg Strict
+  sysctl:
+    name: kernel.dmesg_restrict
+    value: 1
+    state: present
+- name: Set Perf Event Paranoid
+  sysctl:
+    name: kernel.perf_event_paranoid
+    value: 2
+    state: present
+- name: Disable Kexec for Module loading
+  sysctl:
+    name: kernel.kexec_load_disabled
+    value: 1
+    state: present
+- name: Set VM Max Map Count
+  sysctl:
+    name: vm.max_map_count
+    value: 262144
+    state: present
+- name: Set Conntrack Count
+  sysctl:
+    name: net.netfilter.nf_conntrack_max
+    value: 1000000
+    state: present
