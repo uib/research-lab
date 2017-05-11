@@ -1,9 +1,9 @@
-PaaS 2 kubernetes platform
+Research Lab Platform
 ==========================
 
-This repository contains scripts and ansible playbooks for managing the PaaS 2 kubernetes platform.
+This repository contains scripts and ansible playbooks for managing the Research lab platform.
 
-## Bringing up a test cluster
+## Bringing up a test cluster in Safespring (IPnett)
 
 In the `terraform` directory, make a `local.tfvars` based on the
 example, check your setup with `terraform plan --var-file=local.tfvars
