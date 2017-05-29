@@ -5,38 +5,6 @@
     owner: root
     group: root
     mode: 0755
-- name: Create cni tls folder
-  when: " inventory_hostname in groups['masters']"
-  file:
-    path: /etc/cni/net.d/calico-tls
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-- name: Copy calico etcd ca
-  when: " inventory_hostname in groups['masters']"
-  copy:
-    src: tls/etcd/ca.pem
-    dest: /etc/cni/net.d/calico-tls/etcd-ca
-    owner: root
-    group: root
-    mode: 0644
-- name: Copy calico etcd certificate
-  when: " inventory_hostname in groups['masters']"
-  copy:
-    src: tls/etcd/calico.pem
-    dest: /etc/cni/net.d/calico-tls/etcd-cert
-    owner: root
-    group: root
-    mode: 0644
-- name: Copy calico etcd key
-  when: " inventory_hostname in groups['masters']"
-  copy:
-    src: tls/etcd/calico-key.pem
-    dest: /etc/cni/net.d/calico-tls/etcd-key
-    owner: root
-    group: root
-    mode: 0644
 - name: Create cni binary folder
   file:
     path: /opt/cni/bin
