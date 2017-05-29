@@ -28,15 +28,15 @@ resource "openstack_compute_instance_v2" "master" {
     key_pair = "${openstack_compute_keypair_v2.keypair.name}"
     security_groups = [
         "default",
-        "${openstack_networking_secgroup_v2.ssh_access.id}",
-        "${openstack_networking_secgroup_v2.kube_master.id}",
+        "${openstack_networking_secgroup_v2.grp_ssh_access.name}",
+        "${openstack_networking_secgroup_v2.grp_kube_master.name}",
     ]
     user_data = "#cloud-config\nhostname: ${var.cluster_name}-master-${count.index}\n"
 
     #   Connecting to the set network with the provided floating ip.
     network {
         uuid = "${openstack_networking_network_v2.network_1.id}"
-        floating_ip = "${element(openstack_compute_floatingip_v2.master.*.address, count.index)}"
+        floating_ip = "${openstack_compute_floatingip_v2.master.*.address[count.index]}"
     }
 
     block_device {
@@ -59,28 +59,28 @@ resource "openstack_compute_instance_v2" "worker" {
     count = "${var.worker_count}"
     name = "${var.cluster_name}-worker-${count.index}"
     region = "${var.region}"
-    image_id = "${var.coreos_image}"
     flavor_name = "${var.worker_node_flavor}"
     key_pair = "${openstack_compute_keypair_v2.keypair.name}"
     security_groups = [
         "default",
-        "${openstack_networking_secgroup_v2.ssh_access.id}",
-        "${openstack_networking_secgroup_v2.kube_lb.id}",
+        "${openstack_networking_secgroup_v2.grp_ssh_access.name}",
+        "${openstack_networking_secgroup_v2.grp_kube_lb.name}",
     ]
     user_data = "#cloud-config\nhostname: ${var.cluster_name}-worker-${count.index}\n"
 
     #   Connecting to the set network with the provided floating ip.
     network {
         uuid = "${openstack_networking_network_v2.network_1.id}"
-        floating_ip = "${element(openstack_compute_floatingip_v2.worker.*.address, count.index)}"
+        floating_ip = "${openstack_compute_floatingip_v2.worker.*.address[count.index]}"
     }
 
     block_device {
         boot_index = 0
         delete_on_termination = true
         source_type = "image"
-        destination_type = "local"
+        destination_type = "volume"
         uuid = "${var.coreos_image}"
+        volume_size = 40
     }
 }
 
@@ -89,8 +89,8 @@ data "template_file" "masters_ansible" {
     template = "$${name} ansible_host=$${ip} public_ip=$${ip}"
     count = "${var.master_count}"
     vars {
-        name  = "${element(openstack_compute_instance_v2.master.*.name, count.index)}"
-        ip = "${element(openstack_compute_floatingip_v2.master.*.address, count.index)}"
+        name  = "${openstack_compute_instance_v2.master.*.name[count.index]}"
+        ip = "${openstack_compute_floatingip_v2.master.*.address[count.index]}"
     }
 }
 
@@ -98,8 +98,8 @@ data "template_file" "workers_ansible" {
     template = "$${name} ansible_host=$${ip} lb=$${lb_flag}"
     count = "${var.worker_count}"
     vars {
-        name  = "${element(openstack_compute_instance_v2.worker.*.name, count.index)}"
-        ip = "${element(openstack_compute_floatingip_v2.worker.*.address, count.index)}"
+        name  = "${openstack_compute_instance_v2.worker.*.name[count.index]}"
+        ip = "${openstack_compute_floatingip_v2.worker.*.address[count.index]}"
         lb_flag = "${count.index < 3 ? "true" : "false"}"
     }
 }
