@@ -11,6 +11,12 @@ module "global" {
 
     cluster_name = "${var.cluster_name}"
     cluster_dns_domain = "${var.cluster_dns_domain}"
+    allow_ssh_from_v4 = "${var.allow_ssh_from_v4}"
+    allow_lb_from_v4 = "${var.allow_lb_from_v4}"
+    allow_api_access_from_v4 = "${var.allow_api_access_from_v4}"
+    ssh_public_key = "${var.ssh_public_key}"
+    master_count = "${var.master_count}"
+    worker_count = "${var.worker_count}"
 }
 
 module "keypair" {
