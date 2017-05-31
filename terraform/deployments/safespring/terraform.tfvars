@@ -1,6 +1,6 @@
 auth_url = "https://keystone.api.cloud.ipnett.no/v3"
 domain_name = "uninett.no"
-tenant_name = "paastest.uninett.no"
+tenant_name = "researchlab.uninett.no"
 region = "no-south-1"
 node_flavor = "b.medium"
 worker_node_flavor = "b.medium"

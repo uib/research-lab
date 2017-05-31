@@ -191,5 +191,5 @@ spec:
             matchLabels:
               app: kube-selftest
       ports:
-        - protocol: tcp
+        - protocol: TCP
           port: 80
