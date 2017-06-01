@@ -1,0 +1,81 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-test
+  namespace: default
+  labels:
+    app: nginx-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-test
+  revisionHistoryLimit: 2
+  template:
+    metadata:
+      labels:
+        app: nginx-test
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: default
+  labels:
+    app: nginx-test
+  name: nginx-test
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginx-test
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: default
+  name: nginx-test
+spec:
+  rules:
+  - host: nginx-test.cluster.domain.no
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx-test
+          servicePort: 80
+
+---
+apiVersion: extensions/v1beta1
+kind: NetworkPolicy
+metadata:
+  namespace: default
+  name: nginx-test
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx-test
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: kube-ingress
+      ports:
+        - protocol: TCP
+          port: 80
