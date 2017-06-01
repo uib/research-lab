@@ -1,7 +1,30 @@
+// E-mail address provided to dataporten and API password
 user_name = ""
 password = ""
 
-cluster_name = "someirdtest"
+// uh-iaas project
+tenant_name = ""
+
+// Instance name and domain name
+cluster_name = ""
+cluster_dns_domain = ""
+
+// Region: osl or bgo
+region = "osl"
+
+// uh-iaas image ID
+coreos_image = ""
+
+// Use the default one for uh-iaas found in launch instance
+availability_zone = ""
+
+// Number of instances
+master_count = 2
+worker_count = 5
+
+lb_count = 2allow_ssh_from_v4 = [
+   "192.168.1.0/24"
+]
 
 allow_ssh_from_v4 = [
     "192.168.1.0/24"
@@ -13,6 +36,6 @@ allow_lb_from_v4 = [
 ]
 
 allow_api_access_from_v4 = [
-    "192.168.1.0/24",
-    "192.168.2.0/24"
+   "192.168.1.0/24",
+   "192.168.2.0/24"
 ]
