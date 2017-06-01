@@ -17,11 +17,13 @@ fi
 # See:
 #     https://github.com/hashicorp/terraform/issues/7519
 #
-terraform apply -var-file local.tfvars -parallelism 1 \
-          -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_ssh_access_ipv4 \
-          -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_lb_http_ipv4 \
-          -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_lb_https_ipv4 \
-          -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_master_ipv4
+if [ "$1" != "aws" ]; then
+    terraform apply -var-file local.tfvars -parallelism 1 \
+              -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_ssh_access_ipv4 \
+              -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_lb_http_ipv4 \
+              -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_lb_https_ipv4 \
+              -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_master_ipv4
+fi
 
 # Now, do the rest in parallell as normal
 terraform apply -var-file local.tfvars
