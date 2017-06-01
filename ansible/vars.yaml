@@ -23,6 +23,7 @@ graphite_server: 158.38.213.209
 zabbix_server: zabbix-backend.uninett.no
 oidc_issuer_url: https://test.dataporten-api.no
 oidc_client_id: xxxxx-xxxxx-xxxx-xxxxx-xxxx
+oidc_groups_claim: principals
 lvm_vg_name: vg
 calico_ipip: "always"
 calico_node_ver: 1.2.1
