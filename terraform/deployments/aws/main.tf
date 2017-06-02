@@ -29,38 +29,17 @@ module "cluster" {
     allow_api_access_from_v4 = "${module.global.allow_api_access_from_v4}"
 }
 
-data "template_file" "masters_ansible" {
-    template = "$${name} ansible_host=$${ip} public_ip=$${ip}"
-    count = "${var.master_count}"
-    vars {
-        name  = "${module.cluster.master_names[count.index]}"
-        ip = "${module.cluster.master_public_ips[count.index]}"
-    }
-}
-
-data "template_file" "workers_ansible" {
-    template = "$${name} ansible_host=$${ip} lb=$${lb_flag}"
-    count = "${var.worker_count}"
-    vars {
-        name  = "${module.cluster.worker_names[count.index]}"
-        ip = "${module.cluster.worker_public_ips[count.index]}"
-        lb_flag = "${count.index < 3 ? "true" : "false"}"
-    }
-}
-
 data "template_file" "inventory_tail" {
-    template = "$${section_children}\n$${section_vars}"
+    template = "$${section_vars}"
     vars = {
-        section_children = "[servers:children]\nmasters\nworkers"
         section_vars = "[servers:vars]\nansible_ssh_user=core\nansible_python_interpreter=/home/core/bin/python\n[all]\ncluster\n[all:children]\nservers\n[all:vars]\ncluster_name=${var.cluster_name}\ncluster_dns_domain=${var.cluster_dns_domain}\ningress_use_proxy_protocol=${module.global.ingress_use_proxy_protocol}\n"
     }
 }
 
 data "template_file" "inventory" {
-    template = "\n[masters]\n$${master_hosts}\n[workers]\n$${worker_hosts}\n$${inventory_tail}"
+    template = "$${cluster_inventory}\n$${inventory_tail}"
     vars {
-        master_hosts = "${join("\n",data.template_file.masters_ansible.*.rendered)}"
-        worker_hosts = "${join("\n",data.template_file.workers_ansible.*.rendered)}"
+        cluster_inventory = "${module.cluster.inventory}"
         inventory_tail = "${data.template_file.inventory_tail.rendered}"
     }
 }

@@ -1,24 +1,31 @@
-output "master_names" {
-    value = "${module.masters.names}"
+data "template_file" "masters_ansible" {
+    template = "$${name} ansible_host=$${ip} public_ip=$${ip}"
+    count = "${var.master_count}"
+    vars {
+        name  = "${module.masters.names[count.index]}"
+        ip = "${module.masters.public_ips[count.index]}"
+    }
 }
 
-output "master_public_ips" {
-    value = "${module.masters.public_ips}"
+data "template_file" "workers_ansible" {
+    template = "$${name} ansible_host=$${ip} lb=$${lb_flag}"
+    count = "${var.worker_count}"
+    vars {
+        name  = "${module.workers.names[count.index]}"
+        ip = "${module.workers.public_ips[count.index]}"
+        lb_flag = "${count.index < 3 ? "true" : "false"}"
+    }
 }
 
-output "master_private_ips" {
-    value = "${module.masters.private_ips}"
+data "template_file" "inventory" {
+    template = "\n[masters]\n$${master_hosts}\n[workers]\n$${worker_hosts}\n[servers:children]\nmasters\nworkers"
+    vars {
+        master_hosts = "${join("\n",data.template_file.masters_ansible.*.rendered)}"
+        worker_hosts = "${join("\n",data.template_file.workers_ansible.*.rendered)}"
+    }
 }
 
-
-output "worker_names" {
-    value = "${module.workers.names}"
+output "inventory" {
+    value = "${data.template_file.inventory.rendered}"
 }
 
-output "worker_public_ips" {
-    value = "${module.workers.public_ips}"
-}
-
-output "worker_private_ips" {
-    value = "${module.workers.private_ips}"
-}
