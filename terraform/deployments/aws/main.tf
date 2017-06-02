@@ -15,6 +15,7 @@ module "global" {
 module "cluster" {
     source = "../../providers/aws/cluster"
 
+    region = "${var.region}"
     access_key = "${var.access_key}"
     secret_key = "${var.secret_key}"
     cluster_name = "${module.global.cluster_name}"

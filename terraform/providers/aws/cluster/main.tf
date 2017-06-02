@@ -1,5 +1,6 @@
 variable "access_key" {}
 variable "secret_key" {}
+variable "region" {}
 variable "cluster_name" {}
 variable "coreos_image" {}
 variable "master_instance_type" {}
@@ -12,7 +13,7 @@ variable "allow_lb_from_v4" { type = "list" }
 variable "allow_api_access_from_v4" { type = "list" }
 
 provider "aws" {
-    region = "eu-central-1"
+    region = "${var.region}"
     access_key = "${var.access_key}"
     secret_key = "${var.secret_key}"
 }
