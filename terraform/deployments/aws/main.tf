@@ -1,9 +1,3 @@
-provider "aws" {
-  region     = "eu-central-1"
-  access_key = "${var.access_key}"
-  secret_key = "${var.secret_key}"
-}
-
 module "global" {
     source = "../../global-vars"
 
@@ -18,62 +12,40 @@ module "global" {
     ingress_use_proxy_protocol = "${var.ingress_use_proxy_protocol}"
 }
 
-module "keypair" {
-    source = "../../providers/aws/keypair"
+module "cluster" {
+    source = "../../providers/aws/cluster"
 
-    name = "researchlab-${module.global.cluster_name}"
-    pubkey_file = "${module.global.ssh_public_key}"
-}
-
-module "networks" {
-    source = "../../providers/aws/networks"
-
+    access_key = "${var.access_key}"
+    secret_key = "${var.secret_key}"
     cluster_name = "${module.global.cluster_name}"
-}
-
-module "securitygroups" {
-    source = "../../providers/aws/securitygroups"
-
-    vpc_id = "${module.networks.id}"
-    cluster_name = "${module.global.cluster_name}"
+    coreos_image = "${var.coreos_image}"
+    master_instance_type = "${var.master_instance_type}"
+    master_count = "${module.global.master_count}"
+    worker_instance_type = "${var.worker_instance_type}"
+    worker_count = "${module.global.worker_count}"
+    ssh_public_key_file = "${module.global.ssh_public_key}"
     allow_ssh_from_v4 = "${module.global.allow_ssh_from_v4}"
     allow_lb_from_v4 = "${module.global.allow_lb_from_v4}"
     allow_api_access_from_v4 = "${module.global.allow_api_access_from_v4}"
 }
 
-module "masters" {
-    source = "../../providers/aws/master"
-
-    instance_type = "${var.master_instance_type}"
-    image = "${var.coreos_image}"
-    cluster_name = "${module.global.cluster_name}"
-    count = "${module.global.master_count}"
-    key_name = "${module.keypair.name}"
-    subnets = "${module.networks.subnets}"
-    sec_groups = [ "${module.networks.security_group_default}", "${module.securitygroups.ssh}", "${module.securitygroups.master}" ]
+data "template_file" "masters_ansible" {
+    template = "$${name} ansible_host=$${ip} public_ip=$${ip}"
+    count = "${var.master_count}"
+    vars {
+        name  = "${module.cluster.master_names[count.index]}"
+        ip = "${module.cluster.master_public_ips[count.index]}"
+    }
 }
 
-module "workers" {
-    source = "../../providers/aws/worker"
-
-    instance_type = "${var.worker_instance_type}"
-    image = "${var.coreos_image}"
-    cluster_name = "${module.global.cluster_name}"
-    count = "${module.global.worker_count}"
-    key_name = "${module.keypair.name}"
-    subnets = "${module.networks.subnets}"
-    sec_groups = [ "${module.networks.security_group_default}", "${module.securitygroups.ssh}", "${module.securitygroups.lb}" ]
-}
-
-module "loadbalancers" {
-    source = "../../providers/aws/loadbalancer"
-
-    cluster_name = "${module.global.cluster_name}"
-    subnets = "${module.networks.subnets}"
-    sec_group_api_lb = [ "${module.securitygroups.api_lb}" ]
-    sec_group_web_lb = [ "${module.securitygroups.web_lb}" ]
-    masters = "${module.masters.instances}"
-    workers = "${module.workers.instances}"
+data "template_file" "workers_ansible" {
+    template = "$${name} ansible_host=$${ip} lb=$${lb_flag}"
+    count = "${var.worker_count}"
+    vars {
+        name  = "${module.cluster.worker_names[count.index]}"
+        ip = "${module.cluster.worker_public_ips[count.index]}"
+        lb_flag = "${count.index < 3 ? "true" : "false"}"
+    }
 }
 
 data "template_file" "inventory_tail" {
@@ -87,8 +59,8 @@ data "template_file" "inventory_tail" {
 data "template_file" "inventory" {
     template = "\n[masters]\n$${master_hosts}\n[workers]\n$${worker_hosts}\n$${inventory_tail}"
     vars {
-        master_hosts = "${module.masters.list}"
-        worker_hosts = "${module.workers.list}"
+        master_hosts = "${join("\n",data.template_file.masters_ansible.*.rendered)}"
+        worker_hosts = "${join("\n",data.template_file.workers_ansible.*.rendered)}"
         inventory_tail = "${data.template_file.inventory_tail.rendered}"
     }
 }
