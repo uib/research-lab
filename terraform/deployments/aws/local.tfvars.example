@@ -1,7 +1,12 @@
-user_name = ""
-password = ""
+access_key = "somewhat-secret"
+secret_key = "absolutely-secret"
 
-cluster_name = "someirdtest"
+cluster_name = "somekube"
+cluster_dns_domain = "somekube.researchlab.uninett.no"
+
+master_instance_type = "t2.medium"
+worker_instance_type = "t2.large"
+coreos_image = "ami-f3b9639c"
 
 allow_ssh_from_v4 = [
     "192.168.1.0/24"
