@@ -15,6 +15,7 @@ module "global" {
     ssh_public_key = "${var.ssh_public_key}"
     master_count = "${var.master_count}"
     worker_count = "${var.worker_count}"
+    ingress_use_proxy_protocol = "${var.ingress_use_proxy_protocol}"
 }
 
 module "keypair" {
@@ -79,7 +80,7 @@ data "template_file" "inventory_tail" {
     template = "$${section_children}\n$${section_vars}"
     vars = {
         section_children = "[servers:children]\nmasters\nworkers"
-        section_vars = "[servers:vars]\nansible_ssh_user=core\nansible_python_interpreter=/home/core/bin/python\n[all]\ncluster\n[all:children]\nservers\n[all:vars]\ncluster_name=${var.cluster_name}\ncluster_dns_domain=${var.cluster_dns_domain}\n"
+        section_vars = "[servers:vars]\nansible_ssh_user=core\nansible_python_interpreter=/home/core/bin/python\n[all]\ncluster\n[all:children]\nservers\n[all:vars]\ncluster_name=${var.cluster_name}\ncluster_dns_domain=${var.cluster_dns_domain}\ningress_use_proxy_protocol=${module.global.ingress_use_proxy_protocol}\n"
     }
 }
 

@@ -10,6 +10,8 @@ if [ ! -f local.tfvars ]; then
     exit 1
 fi
 
+terraform get
+
 # This first (serial) run of the security group rules are needed due to strange
 # behaviour where only some of the rules are there after the initial run unless
 # the are processed sequentially.
