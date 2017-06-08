@@ -47,9 +47,6 @@ admission control if possible.
 All security related container, component and application output must be logged to a central location. Procedures for
 analysis, forensics and alerting must be established to detect anomalous behavior. 
 
-## End user applications 
-
-
 ## Containers, registries and images 
 
 All end user applications must be sources from an internal container image
