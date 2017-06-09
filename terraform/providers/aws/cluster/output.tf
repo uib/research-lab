@@ -30,3 +30,6 @@ output "inventory" {
     value = "${data.template_file.inventory.rendered}"
 }
 
+output "master_ip" {
+    value = "${module.masters.public_ips[0]}"
+}

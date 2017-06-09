@@ -17,7 +17,7 @@
     creates: tls/oidc-signing-key.pem
 - name: Waiting for API server to become ready
   wait_for:
-    host: "{{ hostvars[groups['masters'][0]]['public_ip'] }}"
+    host: "{{ master_ip }}"
     port: 8443
 - name: Clear Kubernetes configuration directory
   file:

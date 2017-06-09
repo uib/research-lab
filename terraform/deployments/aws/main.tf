@@ -34,7 +34,7 @@ module "cluster" {
 data "template_file" "inventory_tail" {
     template = "$${section_vars}"
     vars = {
-        section_vars = "[servers:vars]\nansible_ssh_user=core\nansible_python_interpreter=/home/core/bin/python\n[all]\ncluster\n[all:children]\nservers\n[all:vars]\ncluster_name=${var.cluster_name}\ncluster_dns_domain=${var.cluster_dns_domain}\ningress_use_proxy_protocol=${module.global.ingress_use_proxy_protocol}\n[masters:children]\nservers-masters\n[workers:children]\nservers-workers\n"
+        section_vars = "[servers:vars]\nansible_ssh_user=core\nansible_python_interpreter=/home/core/bin/python\n[all]\ncluster\n[all:children]\nservers\n[all:vars]\ncluster_name=${var.cluster_name}\ncluster_dns_domain=${var.cluster_dns_domain}\ningress_use_proxy_protocol=${module.global.ingress_use_proxy_protocol}\nmaster_ip=${module.cluster.master_ip}\n[masters:children]\nservers-masters\n[workers:children]\nservers-workers\n"
     }
 }
 
