@@ -22,9 +22,7 @@ availability_zone = ""
 master_count = 2
 worker_count = 5
 
-lb_count = 2allow_ssh_from_v4 = [
-   "192.168.1.0/24"
-]
+lb_count = 2
 
 allow_ssh_from_v4 = [
     "192.168.1.0/24"
