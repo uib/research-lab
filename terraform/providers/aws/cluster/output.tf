@@ -18,9 +18,9 @@ data "template_file" "workers_ansible" {
 }
 
 data "template_file" "inventory" {
-    template = "\n[$${inventory_section}-masters]\n$${master_hosts}\n[$${inventory_section}-workers]\n$${worker_hosts}\n[$${inventory_section}:children]\n$${inventory_section}-masters\n$${inventory_section}-workers"
+    template = "\n[$${cluster_name}-masters]\n$${master_hosts}\n[$${cluster_name}-workers]\n$${worker_hosts}\n[$${cluster_name}:children]\n$${cluster_name}-masters\n$${cluster_name}-workers"
     vars {
-        inventory_section = "${var.inventory_section}"
+        cluster_name = "${var.cluster_name}"
         master_hosts = "${join("\n",data.template_file.masters_ansible.*.rendered)}"
         worker_hosts = "${join("\n",data.template_file.workers_ansible.*.rendered)}"
     }

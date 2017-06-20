@@ -2,7 +2,6 @@ variable "access_key" {}
 variable "secret_key" {}
 variable "region" {}
 variable "cluster_name" {}
-variable "inventory_section" {}
 variable "coreos_image" {}
 variable "master_instance_type" {}
 variable "master_count" {}

@@ -19,7 +19,6 @@ module "cluster" {
     access_key = "${var.access_key}"
     secret_key = "${var.secret_key}"
     cluster_name = "${module.global.cluster_name}"
-    inventory_section = "${module.global.cluster_name}"
     coreos_image = "${var.coreos_image}"
     master_instance_type = "${var.master_instance_type}"
     master_count = "${module.global.master_count}"
