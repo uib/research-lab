@@ -2,6 +2,8 @@ variable "access_key" {}
 variable "secret_key" {}
 variable "region" {}
 variable "cluster_name" {}
+variable "cluster_dns_domain" {}
+variable "ingress_use_proxy_protocol" {}
 variable "coreos_image" {}
 variable "master_instance_type" {}
 variable "master_count" {}
