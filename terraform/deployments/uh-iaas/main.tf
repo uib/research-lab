@@ -64,19 +64,29 @@ module "workers" {
     sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.lb}" ]
 }
 
+data "template_file" "cluster" {
+    template = "[$${cluster_name}-masters]\n$${master_hosts}\n[$${cluster_name}-workers]\n$${worker_hosts}\n[$${cluster_name}]\ncluster-$${cluster_name}\n[$${cluster_name}:children]\n$${cluster_name}-masters\n$${cluster_name}-workers\n[$${cluster_name}:vars]\nmaster_ip=$${master_ip}\ncluster_name=$${cluster_name}\ncluster_dns_domain=$${cluster_dns_domain}\ningress_use_proxy_protocol=$${ingress_use_proxy_protocol}\nmaster_ip=$${master_ip}\n"
+    vars {
+        cluster_name = "${var.cluster_name}"
+        cluster_dns_domain = "${var.cluster_dns_domain}"
+        ingress_use_proxy_protocol = "${module.global.ingress_use_proxy_protocol}"
+        master_ip = "${module.masters.master_ip}"
+        master_hosts = "${module.masters.list}"
+        worker_hosts = "${module.workers.list}"
+    }
+}
+
 data "template_file" "inventory_tail" {
-    template = "$${section_children}\n$${section_vars}"
+    template = "[all:children]\n$${cluster_name}\n\n[masters:children]\n$${cluster_name}-masters\n[workers:children]\n$${cluster_name}-workers\n[servers:children]\nmasters\nworkers\n[servers:vars]\nansible_ssh_user=core\nansible_python_interpreter=/home/core/bin/python\n"
     vars = {
-        section_children = "[servers:children]\nmasters\nworkers"
-        section_vars = "[servers:vars]\nansible_ssh_user=core\nansible_python_interpreter=/home/core/bin/python\n[all]\ncluster\n[all:children]\nservers\n[all:vars]\ncluster_name=${var.cluster_name}\ncluster_dns_domain=${var.cluster_dns_domain}\ningress_use_proxy_protocol=${module.global.ingress_use_proxy_protocol}\nmaster_ip=${module.masters.master_ip}\n"
+        cluster_name = "${var.cluster_name}"
     }
 }
 
 data "template_file" "inventory" {
-    template = "\n[masters]\n$${master_hosts}\n[workers]\n$${worker_hosts}\n$${inventory_tail}"
+    template = "$${cluster}\n$${inventory_tail}"
     vars {
-        master_hosts = "${module.masters.list}"
-        worker_hosts = "${module.workers.list}"
+        cluster = "${data.template_file.cluster.rendered}"
         inventory_tail = "${data.template_file.inventory_tail.rendered}"
     }
 }
