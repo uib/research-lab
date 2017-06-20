@@ -5,7 +5,7 @@
 - name: Generating kubeconfig
   template:
     src: kubeconfig.j2
-    dest: ./kubeconfig
+    dest: ./kubeconfig-{{ inventory_hostname }}
     mode: 0600
 - name: Generate calico etcd certificate & key
   command: ./tls/generate_cert.sh etcd client calico
@@ -21,25 +21,25 @@
     port: 8443
 - name: Clear Kubernetes configuration directory
   file:
-    dest: ./cluster_config
+    dest: ./cluster_config-{{ inventory_hostname }}
     state: absent
 - name: Prepare Kubernetes configuration directory
   file:
-    dest: ./cluster_config
+    dest: ./cluster_config-{{ inventory_hostname }}
     state: directory
 - name: Copy configuration files
   copy:
     src: "{{ item }}"
-    dest: "./cluster_config/{{ item | basename }}"
+    dest: "./cluster_config-{{ inventory_hostname }}/{{ item | basename }}"
   with_fileglob:
   - '*.yaml'
 - name: Initialize templated configuration files
   template:
     src: "{{ item }}"
-    dest: "./cluster_config/{{ item | basename | regex_replace('\\.j2$','') }}"
+    dest: "./cluster_config-{{ inventory_hostname }}/{{ item | basename | regex_replace('\\.j2$','') }}"
   with_fileglob:
   - '../templates/*.yaml.j2'
 - name: Create required pod security policies
-  command: kubectl --kubeconfig kubeconfig apply -f ./cluster_config/podsecuritypolicy.yaml
+  command: kubectl --kubeconfig kubeconfig-{{ inventory_hostname }} apply -f ./cluster_config-{{ inventory_hostname }}/podsecuritypolicy.yaml
 - name: Apply configuration files
-  command: kubectl --kubeconfig kubeconfig apply -f ./cluster_config
+  command: kubectl --kubeconfig kubeconfig-{{ inventory_hostname }} apply -f ./cluster_config-{{ inventory_hostname }}
