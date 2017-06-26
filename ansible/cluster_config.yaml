@@ -1,5 +1,5 @@
 - name: Configure Kubernetes
-  hosts: cluster
+  hosts: all:!masters:!workers
   connection: local
   become: false
   vars_files:
