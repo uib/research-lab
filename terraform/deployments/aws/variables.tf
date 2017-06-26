@@ -1,6 +1,7 @@
 # Access key & secret key for AWS.
 variable "access_key" {}
 variable "secret_key" {}
+variable "region" { default = "eu-central-1" }
 
 # References to machine types and coreos AMI image.
 variable "master_instance_type" {}

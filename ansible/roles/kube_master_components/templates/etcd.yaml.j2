@@ -33,7 +33,9 @@ spec:
     - --advertise-client-urls=https://{{ inventory_hostname }}.node.cluster.local:2379
     - --initial-cluster={% set comma = joiner(',') %}
 {%- for host in groups['masters'] -%}
+{%- if cluster_name == hostvars[host]['cluster_name'] -%}
 {{ comma() }}{{ host }}=https://{{ host }}.node.cluster.local:2380
+{%- endif -%}
 {%- endfor %}
 
     volumeMounts:

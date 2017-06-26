@@ -35,8 +35,10 @@ metadata:
   name: kube-cm
 subjects:
 {% for host in groups['masters'] %}
+{%- if cluster_name == hostvars[host]['cluster_name'] %}
   - kind: User
     name: "{{ host }}-cm"
+{% endif %}
 {% endfor %}
 roleRef:
   kind: ClusterRole

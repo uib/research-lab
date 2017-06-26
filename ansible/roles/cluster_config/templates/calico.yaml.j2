@@ -106,7 +106,9 @@ data:
   # Configure this with the location of your etcd cluster.
   etcd_endpoints: {% set comma = joiner(',') %}
 {%- for host in groups['masters'] -%}
+{%- if cluster_name == hostvars[host]['cluster_name'] -%}
 {{ comma() }}https://{{ host }}.node.cluster.local:2379
+{%- endif -%}
 {%- endfor %}
 
   # Configure the Calico backend to use.
