@@ -30,3 +30,7 @@ if [ ! -x ./tls/bin/cfssl -o ! -x ./tls/bin/cfssljson ]; then
 fi
 
 ./tls/init_cas.sh
+
+if [ ! -f 'weave_password' ]; then
+    .ve/bin/python -c 'import random; print "%0x" % (random.SystemRandom().getrandbits(16*8),)' >weave_password
+fi

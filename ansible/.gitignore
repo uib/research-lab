@@ -4,3 +4,4 @@
 /kubeconfig-*
 /cluster_config-*
 /scripts
+/weave_password

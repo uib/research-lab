@@ -46,6 +46,7 @@ spec:
     rule: RunAsAny
   volumes:
     - 'hostPath'
+    - 'secret'
 
 ---
 
@@ -102,6 +103,17 @@ subjects:
 
 ---
 
+apiVersion: v1
+kind: Secret
+metadata:
+  name: weave-net
+  namespace: kube-system
+type: Opaque
+data:
+  weave_password: {{ lookup('file', 'weave_password')|b64encode }}
+
+---
+
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
@@ -127,6 +139,11 @@ spec:
                   fieldPath: spec.nodeName
             - name: IPALLOC_RANGE
               value: "{{ pod_ip_range }}"
+            - name: WEAVE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: weave-net
+                  key: weave_password
           image: 'weaveworks/weave-kube:2.0.0'
           livenessProbe:
             httpGet:
