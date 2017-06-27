@@ -143,6 +143,8 @@ spec:
               value: "consensus={{ groups['masters'] | length }}"
             - name: IPALLOC_RANGE
               value: "{{ pod_ip_range }}"
+            - name: KUBE_PEERS
+              value: "{% set comma = joiner(' ') %}{% for host in groups['masters'] %}{{ comma() }}{{ hostvars[host]['public_ip'] }}{% endfor %}"
             - name: WEAVE_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -243,6 +245,8 @@ spec:
               value: "observer"
             - name: IPALLOC_RANGE
               value: "{{ pod_ip_range }}"
+            - name: KUBE_PEERS
+              value: "{% set comma = joiner(' ') %}{% for host in groups['masters'] %}{{ comma() }}{{ hostvars[host]['public_ip'] }}{% endfor %}"
             - name: WEAVE_PASSWORD
               valueFrom:
                 secretKeyRef:
