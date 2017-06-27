@@ -139,6 +139,8 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: spec.nodeName
+            - name: IPALLOC_INIT
+              value: "consensus={{ groups['masters'] | length }}"
             - name: IPALLOC_RANGE
               value: "{{ pod_ip_range }}"
             - name: WEAVE_PASSWORD
@@ -237,6 +239,8 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: spec.nodeName
+            - name: IPALLOC_INIT
+              value: "observer"
             - name: IPALLOC_RANGE
               value: "{{ pod_ip_range }}"
             - name: WEAVE_PASSWORD
