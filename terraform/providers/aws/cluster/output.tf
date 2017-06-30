@@ -36,3 +36,15 @@ output "inventory" {
 output "master_ip" {
     value = "${module.masters.public_ips[0]}"
 }
+
+output "master_ips" {
+    value = "${module.masters.public_ips}"
+}
+
+output "worker_ips" {
+    value = "${module.workers.public_ips}"
+}
+
+output "weave_security_group" {
+    value = "${module.securitygroups.weave}"
+}

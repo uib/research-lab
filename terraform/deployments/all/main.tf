@@ -81,6 +81,44 @@ module "safespring_cluster" {
     ingress_use_proxy_protocol = "${module.global.ingress_use_proxy_protocol}"
 }
 
+module "aws_cluster_weave_peers" {
+    source = "../../providers/aws/sec_weave_peers"
+
+    region = "${var.aws_region}"
+    access_key = "${var.aws_access_key}"
+    secret_key = "${var.aws_secret_key}"
+    weave_security_group = "${module.aws_cluster.weave_security_group}"
+    weave_peers = "${concat(module.uhiaas_cluster.master_ips, module.uhiaas_cluster.worker_ips, module.safespring_cluster.master_ips, module.safespring_cluster.worker_ips)}"
+}
+
+module "uhiaas_cluster_weave_peers" {
+    source = "../../providers/openstack/sec_weave_peers"
+
+    auth_url = "${var.uhiaas_auth_url}"
+    domain_name = "${var.uhiaas_domain_name}"
+    tenant_name = "${var.uhiaas_tenant_name}"
+    user_name = "${var.uhiaas_user_name}"
+    password = "${var.uhiaas_password}"
+    region = "${var.uhiaas_region}"
+    weave_security_group = "${module.uhiaas_cluster.weave_security_group}"
+    weave_peers = "${concat(module.aws_cluster.master_ips, module.aws_cluster.worker_ips, module.safespring_cluster.master_ips, module.safespring_cluster.worker_ips)}"
+    weave_peers_count = "${(module.global.master_count + module.global.worker_count) * 2}"
+}
+
+module "safespring_cluster_weave_peers" {
+    source = "../../providers/openstack/sec_weave_peers"
+
+    auth_url = "${var.safespring_auth_url}"
+    domain_name = "${var.safespring_domain_name}"
+    tenant_name = "${var.safespring_tenant_name}"
+    user_name = "${var.safespring_user_name}"
+    password = "${var.safespring_password}"
+    region = "${var.safespring_region}"
+    weave_security_group = "${module.safespring_cluster.weave_security_group}"
+    weave_peers = "${concat(module.aws_cluster.master_ips, module.aws_cluster.worker_ips, module.uhiaas_cluster.master_ips, module.uhiaas_cluster.worker_ips)}"
+    weave_peers_count = "${(module.global.master_count + module.global.worker_count) * 2}"
+}
+
 data "template_file" "inventory_tail" {
     template = "$${section_vars}"
     vars = {

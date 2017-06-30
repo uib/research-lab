@@ -143,3 +143,36 @@ resource "aws_security_group_rule" "rule_kube_master_from_lb" {
     source_security_group_id = "${aws_security_group.api_lb.id}"
     security_group_id = "${aws_security_group.grp_kube_master.id}"
 }
+
+resource "aws_security_group" "grp_weave_peers" {
+    name = "${var.cluster_name}-weave_peers"
+    description = "Allow Weave communication"
+    vpc_id = "${var.vpc_id}"
+}
+
+resource "aws_security_group_rule" "weave_internal_peers_tcp" {
+    type = "ingress"
+    from_port = 6783
+    to_port = 6783
+    protocol = "tcp"
+    self = true
+    security_group_id = "${aws_security_group.grp_weave_peers.id}"
+}
+
+resource "aws_security_group_rule" "weave_internal_peers_udp" {
+    type = "ingress"
+    from_port = 6783
+    to_port = 6784
+    protocol = "udp"
+    self = true
+    security_group_id = "${aws_security_group.grp_weave_peers.id}"
+}
+
+resource "aws_security_group_rule" "weave_internal_peers_esp" {
+    type = "ingress"
+    from_port = 0
+    to_port = 0
+    protocol = "50"
+    self = true
+    security_group_id = "${aws_security_group.grp_weave_peers.id}"
+}

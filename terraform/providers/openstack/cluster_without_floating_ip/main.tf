@@ -55,7 +55,7 @@ module "masters" {
     cluster_name = "${var.cluster_name}"
     count = "${var.master_count}"
     keypair = "${module.keypair.name}"
-    sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.master}" ]
+    sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.master}", "${module.securitygroups.weave}" ]
 }
 
 module "workers" {
@@ -68,5 +68,5 @@ module "workers" {
     cluster_name = "${var.cluster_name}"
     count = "${var.worker_count}"
     keypair = "${module.keypair.name}"
-    sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.lb}" ]
+    sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.lb}", "${module.securitygroups.weave}" ]
 }

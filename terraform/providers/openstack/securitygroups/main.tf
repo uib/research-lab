@@ -72,3 +72,39 @@ resource "openstack_networking_secgroup_rule_v2" "rule_kube_master_ipv4" {
     security_group_id = "${openstack_networking_secgroup_v2.grp_kube_master.id}"
 }
 
+resource "openstack_networking_secgroup_v2" "grp_weave_peers" {
+    region = "${var.region}"
+    name = "${var.cluster_name}_weave_peers"
+    description = "Allow Weave communication"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "weave_internal_peers_tcp" {
+    region = "${var.region}"
+    direction = "ingress"
+    ethertype = "IPv4"
+    protocol = "tcp"
+    port_range_min = 6783
+    port_range_max = 6783
+    security_group_id = "${openstack_networking_secgroup_v2.grp_weave_peers.id}"
+    remote_group_id = "${openstack_networking_secgroup_v2.grp_weave_peers.id}"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "weave_internal_peers_udp" {
+    region = "${var.region}"
+    direction = "ingress"
+    ethertype = "IPv4"
+    protocol = "udp"
+    port_range_min = 6783
+    port_range_max = 6784
+    security_group_id = "${openstack_networking_secgroup_v2.grp_weave_peers.id}"
+    remote_group_id = "${openstack_networking_secgroup_v2.grp_weave_peers.id}"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "weave_internal_peers_esp" {
+    region = "${var.region}"
+    direction = "ingress"
+    ethertype = "IPv4"
+    protocol = "50"
+    security_group_id = "${openstack_networking_secgroup_v2.grp_weave_peers.id}"
+    remote_group_id = "${openstack_networking_secgroup_v2.grp_weave_peers.id}"
+}

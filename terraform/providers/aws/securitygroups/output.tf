@@ -17,3 +17,7 @@ output "api_lb" {
 output "web_lb" {
     value = "${aws_security_group.web_lb.id}"
 }
+
+output "weave" {
+    value = "${aws_security_group.grp_weave_peers.id}"
+}

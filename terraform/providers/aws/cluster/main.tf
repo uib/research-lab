@@ -52,7 +52,7 @@ module "masters" {
     count = "${var.master_count}"
     key_name = "${module.keypair.name}"
     subnets = "${module.networks.subnets}"
-    sec_groups = [ "${module.networks.security_group_default}", "${module.securitygroups.ssh}", "${module.securitygroups.master}" ]
+    sec_groups = [ "${module.networks.security_group_default}", "${module.securitygroups.ssh}", "${module.securitygroups.master}", "${module.securitygroups.weave}" ]
 }
 
 module "workers" {
@@ -64,7 +64,7 @@ module "workers" {
     count = "${var.worker_count}"
     key_name = "${module.keypair.name}"
     subnets = "${module.networks.subnets}"
-    sec_groups = [ "${module.networks.security_group_default}", "${module.securitygroups.ssh}", "${module.securitygroups.lb}" ]
+    sec_groups = [ "${module.networks.security_group_default}", "${module.securitygroups.ssh}", "${module.securitygroups.lb}", "${module.securitygroups.weave}" ]
 }
 
 module "loadbalancers" {

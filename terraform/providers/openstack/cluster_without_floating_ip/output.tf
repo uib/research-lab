@@ -13,3 +13,15 @@ data "template_file" "inventory" {
 output "inventory" {
     value = "${data.template_file.inventory.rendered}"
 }
+
+output "master_ips" {
+    value = "${module.masters.public_ips}"
+}
+
+output "worker_ips" {
+    value = "${module.workers.public_ips}"
+}
+
+output "weave_security_group" {
+    value = "${module.securitygroups.weave_id}"
+}

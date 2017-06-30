@@ -61,7 +61,7 @@ module "masters" {
     count = "${var.master_count}"
     keypair = "${module.keypair.name}"
     network = "${module.networks.id}"
-    sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.master}" ]
+    sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.master}", "${module.securitygroups.weave}" ]
 }
 
 module "workers" {
@@ -74,5 +74,5 @@ module "workers" {
     count = "${var.worker_count}"
     keypair = "${module.keypair.name}"
     network = "${module.networks.id}"
-    sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.lb}" ]
+    sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.lb}", "${module.securitygroups.weave}" ]
 }

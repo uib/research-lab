@@ -5,3 +5,7 @@ output "list" {
 output "master_ip" {
     value = "${openstack_compute_instance_v2.master.0.access_ip_v4}"
 }
+
+output "public_ips" {
+    value = "${openstack_compute_instance_v2.master.*.access_ip_v4}"
+}
