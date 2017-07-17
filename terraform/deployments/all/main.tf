@@ -12,6 +12,29 @@ module "global" {
     ingress_use_proxy_protocol = "${var.ingress_use_proxy_protocol}"
 }
 
+module "azure_cluster" {
+    source = "../../providers/azure/cluster"
+
+    region = "${var.azure_region}"
+    client_id = "${var.azure_client_id}"
+    client_secret = "${var.azure_client_secret}"
+    subscription_id = "${var.azure_subscription_id}"
+    tenant_id = "${var.azure_tenant_id}"
+
+    cluster_name = "${module.global.cluster_name}-azure"
+    cluster_dns_domain = "cluster-azure.${var.cluster_dns_domain}"
+    ingress_use_proxy_protocol = "${module.global.ingress_use_proxy_protocol}"
+    coreos_image = "${var.azure_coreos_image}"
+    master_instance_type = "${var.azure_master_instance_type}"
+    master_count = "${module.global.master_count}"
+    worker_instance_type = "${var.azure_worker_instance_type}"
+    worker_count = "${module.global.worker_count}"
+    ssh_public_key_file = "${module.global.ssh_public_key}"
+    allow_ssh_from_v4 = "${module.global.allow_ssh_from_v4}"
+    allow_lb_from_v4 = "${module.global.allow_lb_from_v4}"
+    allow_api_access_from_v4 = "${module.global.allow_api_access_from_v4}"
+}
+
 module "aws_cluster" {
     source = "../../providers/aws/cluster"
 

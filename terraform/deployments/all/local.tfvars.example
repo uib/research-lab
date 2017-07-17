@@ -1,3 +1,12 @@
+azure_subscription_id = ""
+azure_tenant_id = ""
+azure_client_id = ""
+azure_client_secret = ""
+azure_region" = "westeurope"
+azure_master_instance_type = "Standard_A1_v2"
+azure_worker_instance_type = "Standard_A2_v2"
+azure_coreos_image = "latest"
+
 aws_access_key = ""
 aws_secret_key = ""
 aws_master_instance_type = "t2.medium"

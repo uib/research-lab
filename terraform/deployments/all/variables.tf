@@ -1,3 +1,13 @@
+# Azure configuration
+variable "azure_subscription_id" {}
+variable "azure_tenant_id" {}
+variable "azure_client_id" {}
+variable "azure_client_secret" {}
+variable "azure_region" { default = "westeurope" }
+variable "azure_master_instance_type" {}
+variable "azure_worker_instance_type" {}
+variable "azure_coreos_image" {}
+
 # AWS configuration
 variable "aws_access_key" {}
 variable "aws_secret_key" {}
