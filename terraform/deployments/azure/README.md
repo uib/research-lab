@@ -36,6 +36,7 @@ https://stackoverflow.com/questions/35144550/how-to-install-cryptography-on-ubun
 - https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/
 
 På lokal maskin kjørte vi videre:
+
     $ cd ../../../ansible
     $ cat kubeconfig
     $ kubectl --kubeconfig=kubeconfig get node
