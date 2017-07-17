@@ -36,16 +36,16 @@ https://stackoverflow.com/questions/35144550/how-to-install-cryptography-on-ubun
 - https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/
 
 På lokal maskin kjørte vi videre:
-$ cd ../../../ansible
-$ cat kubeconfig
-$ kubectl --kubeconfig=kubeconfig get node
-$ kubectl --kubeconfig=kubeconfig get pod -n kube-system
+    $ cd ../../../ansible
+    $ cat kubeconfig
+    $ kubectl --kubeconfig=kubeconfig get node
+    $ kubectl --kubeconfig=kubeconfig get pod -n kube-system
 
 Slik kjører man et shell på en kontainer i clusteret (usikker på hva "shell" er, men det kan være en tilfeldig streng. label)
-$ kubectl --kubeconfig=kubeconfig run --rm -ti --image=alpine shell sh
+`$ kubectl --kubeconfig=kubeconfig run --rm -ti --image=alpine shell sh`
 
 Hvis man får problemer med at terraform ikke vil kjøre, så kan man slette noen tilstandsfiler:
-$ rm terraform.tfstate terraform.tfstate.backup
+`$ rm terraform.tfstate terraform.tfstate.backup`
 
 Jobbing med nginx
-export KUBECONFIG=et-eller-annet
+`export KUBECONFIG=et-eller-annet`
