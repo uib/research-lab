@@ -26,6 +26,6 @@ oidc_client_id: xxxxx-xxxxx-xxxx-xxxxx-xxxx
 oidc_groups_claim: principals
 lvm_vg_name: vg
 calico_ipip: "always"
-calico_node_ver: 1.2.1
-calico_cni_ver: 1.8.3
-calico_k8s_policy_ver: 0.6.0
+calico_node_ver: 2.6.1
+calico_cni_ver: 1.11.0
+calico_k8s_policy_ver: 1.0.0
