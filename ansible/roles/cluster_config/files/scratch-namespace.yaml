@@ -14,7 +14,7 @@ spec:
 
 ---
 kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1alpha1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: scratch-internal-edit
   namespace: scratch
@@ -57,21 +57,20 @@ spec:
 ---
 
 kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1alpha1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: kube-dashboard-scatch
   namespace: scratch
 subjects:
   - kind: ServiceAccount
     name: dashboard
-    namespace: kube-system
 roleRef:
   kind: ClusterRole
   name: view
   apiGroup: rbac.authorization.k8s.io
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1alpha1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: scratch-internal-ingress
@@ -100,7 +99,7 @@ rules:
 
 ---
 kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1alpha1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: scratch-internal-ingress
   namespace: scratch
