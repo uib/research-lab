@@ -49,6 +49,8 @@ spec:
     - --audit-log-path=/var/log/apiserver/audit.log
     - --audit-log-maxage=7
     - --audit-log-maxbackup=5
+    - --audit-log-format=json
+    - --audit-policy-file=/etc/kubernetes/audit-policy.yaml
     - --oidc-issuer-url={{oidc_issuer_url}}
     - --oidc-client-id={{oidc_client_id}}
     - --oidc-groups-claim={{oidc_groups_claim}}
@@ -73,6 +75,8 @@ spec:
       readOnly: true
     - mountPath: /var/log/apiserver
       name: apiserver-auditlog
+    - mountPath: /etc/kubernetes/audit-policy.yaml
+      name: apiserver-audit-policy
   volumes:
   - hostPath:
       path: /etc/kubernetes/ssl
@@ -86,6 +90,9 @@ spec:
   - hostPath:
       path: /etc/kubernetes/service-key.pem
     name: kubernetes-service-key
+  - hostPath:
+      path: /etc/kubernetes/audit-policy.yaml
+    name: apiserver-audit-policy
   - hostPath:
       path: /etc/hosts
     name: hosts
