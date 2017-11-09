@@ -27,13 +27,13 @@ terraform get
 #     https://github.com/hashicorp/terraform/issues/7519
 #
 if [ "$1" = "uh-iaas" -o "$1" = "safespring" ]; then
-    terraform apply -var-file local.tfvars -parallelism 1 \
+    terraform apply -var-file local.tfvars -parallelism=1 \
               -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_ssh_access_ipv4 \
               -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_lb_http_ipv4 \
               -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_lb_https_ipv4 \
               -target module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_master_ipv4
 elif [ "$1" = "all" ]; then
-    terraform apply -var-file local.tfvars -parallelism 1 \
+    terraform apply -var-file local.tfvars -parallelism=1 \
               -target module.uhiaas_cluster.module.securitygroups.openstack_networking_secgroup_rule_v2.rule_ssh_access_ipv4 \
               -target module.uhiaas_cluster.module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_lb_http_ipv4 \
               -target module.uhiaas_cluster.module.securitygroups.openstack_networking_secgroup_rule_v2.rule_kube_lb_https_ipv4 \

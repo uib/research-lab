@@ -26,17 +26,18 @@ spec:
     - --etcd-cafile=/etc/ssl/etcd/ca.pem
     - --etcd-certfile=/etc/ssl/etcd/node.pem
     - --etcd-keyfile=/etc/ssl/etcd/node-key.pem
+    - --etcd-quorum-read=true
     - --allow-privileged=true
     - --service-cluster-ip-range={{ service_ip_range }}
     - --secure-port=8443
-    - --admission-control=NamespaceLifecycle,DenyEscalatingExec,LimitRanger,ServiceAccount,ResourceQuota,PodSecurityPolicy
+    - --admission-control=NamespaceLifecycle,DenyEscalatingExec,LimitRanger,ServiceAccount,ResourceQuota,PodSecurityPolicy,AlwaysPullImages,NodeRestriction,OwnerReferencesPermissionEnforcement,DefaultTolerationSeconds,Priority
     - --tls-cert-file=/etc/kubernetes/ssl/node.pem
     - --tls-private-key-file=/etc/kubernetes/ssl/node-key.pem
     - --client-ca-file=/etc/kubernetes/ssl/ca.pem
     - --service-account-key-file=/etc/kubernetes/service-key.pem
     - --service-account-lookup=true
-    - --runtime-config=extensions/v1beta1=true,extensions/v1beta1/networkpolicies=true,rbac.authorization.k8s.io/v1beta1=true,extensions/v1beta1/podsecuritypolicy=true
-    - --feature-gates=Accelerators=true,ExperimentalCriticalPodAnnotation=true,TaintBasedEvictions=true
+    - --runtime-config=extensions/v1beta1=true,extensions/v1beta1/networkpolicies=true,rbac.authorization.k8s.io/v1beta1=true,extensions/v1beta1/podsecuritypolicy=true,scheduling.k8s.io/v1alpha1=true
+    - --feature-gates=Accelerators=true,ExperimentalCriticalPodAnnotation=true,TaintBasedEvictions=true,MountPropagation=true,DevicePlugins=True,PodPriority=True
     - --authorization-mode=RBAC
     - --service-node-port-range=30-32767
     - --storage-backend=etcd3
@@ -48,6 +49,8 @@ spec:
     - --audit-log-path=/var/log/apiserver/audit.log
     - --audit-log-maxage=7
     - --audit-log-maxbackup=5
+    - --audit-log-format=json
+    - --audit-policy-file=/etc/kubernetes/audit-policy.yaml
     - --oidc-issuer-url={{oidc_issuer_url}}
     - --oidc-client-id={{oidc_client_id}}
     - --oidc-groups-claim={{oidc_groups_claim}}
@@ -72,6 +75,8 @@ spec:
       readOnly: true
     - mountPath: /var/log/apiserver
       name: apiserver-auditlog
+    - mountPath: /etc/kubernetes/audit-policy.yaml
+      name: apiserver-audit-policy
   volumes:
   - hostPath:
       path: /etc/kubernetes/ssl
@@ -85,6 +90,9 @@ spec:
   - hostPath:
       path: /etc/kubernetes/service-key.pem
     name: kubernetes-service-key
+  - hostPath:
+      path: /etc/kubernetes/audit-policy.yaml
+    name: apiserver-audit-policy
   - hostPath:
       path: /etc/hosts
     name: hosts

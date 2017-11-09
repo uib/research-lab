@@ -1,6 +1,6 @@
-k8s_ver: 1.6.4
+k8s_ver: 1.8.1
 # k8s_next_ver: 1.x.y
-etcd_ver: 3.1.6
+etcd_ver: 3.2.9
 # etcd_next_ver: 3.u.v
 apiserver_count: 3
 dns_service_ip: 172.16.0.10
@@ -26,6 +26,6 @@ oidc_client_id: xxxxx-xxxxx-xxxx-xxxxx-xxxx
 oidc_groups_claim: principals
 lvm_vg_name: vg
 calico_ipip: "always"
-calico_node_ver: 1.2.1
-calico_cni_ver: 1.8.3
-calico_k8s_policy_ver: 0.6.0
+calico_node_ver: 2.6.1
+calico_cni_ver: 1.11.0
+calico_k8s_policy_ver: 1.0.0

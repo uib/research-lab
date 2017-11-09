@@ -26,7 +26,6 @@ resource "openstack_compute_instance_v2" "worker" {
     #   Connecting to the set network with the provided floating ip.
     network {
         uuid = "${var.network}"
-        floating_ip = "${openstack_compute_floatingip_v2.worker.*.address[count.index]}"
     }
 
     block_device {
@@ -37,6 +36,12 @@ resource "openstack_compute_instance_v2" "worker" {
         uuid = "${var.image}"
         volume_size = 40
     }
+}
+
+resource "openstack_compute_floatingip_associate_v2" "worker" {
+    count = "${var.count}"
+    floating_ip = "${openstack_compute_floatingip_v2.worker.*.address[count.index]}"
+    instance_id = "${openstack_compute_instance_v2.worker.*.id[count.index]}"
 }
 
 data "template_file" "workers_ansible" {
