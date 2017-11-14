@@ -8,6 +8,7 @@ if [ ! -x ./.ve/bin/ansible ]; then
     echo "Setting up Python virtualenv containing ansible."
     rm -rf .ve
     virtualenv -p python2 .ve
+    .ve/bin/pip install setuptools --upgrade
     .ve/bin/pip install ansible
     .ve/bin/pip install markupsafe
 fi
