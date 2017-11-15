@@ -10,7 +10,7 @@ metadata:
   name: default-deny
   namespace: scratch
 spec:
-  podSelector:
+  podSelector: {}
 
 ---
 kind: RoleBinding
