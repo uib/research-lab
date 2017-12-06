@@ -46,6 +46,21 @@ resource "azurerm_network_security_rule" "master-sg-sr-outbound" {
   depends_on                  = ["azurerm_network_security_group.master-sg"]
 }
 
+resource "azurerm_network_security_rule" "master-sg-sr-inbound" {
+  name                        = "inbound-access-rule"
+  priority                    = 150
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "*"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefix       = "${var.cidr}"
+  destination_address_prefix  = "*"
+  resource_group_name         = "${var.rg_name}"
+  network_security_group_name = "${var.cluster_name}-master-sg"
+  depends_on                  = ["azurerm_network_security_group.master-sg"]
+}
+
 resource "azurerm_network_security_rule" "master-sg-sr-ssh" {
   name                        = "ssh-access-rule${count.index}"
   priority                    = "20${count.index}"
@@ -132,6 +147,21 @@ resource "azurerm_network_security_rule" "worker-sg-sr-outbound" {
   name                       = "outbound-access-rule"
   priority                   = 150
   direction                  = "Outbound"
+  access                     = "Allow"
+  protocol                   = "*"
+  source_port_range          = "*"
+  destination_port_range     = "*"
+  source_address_prefix      = "${var.cidr}"
+  destination_address_prefix = "*"
+  resource_group_name         = "${var.rg_name}"
+  network_security_group_name = "${var.cluster_name}-worker-sg"
+  depends_on                  = ["azurerm_network_security_group.worker-sg"]
+}
+
+resource "azurerm_network_security_rule" "worker-sg-sr-inbound" {
+  name                       = "inbound-access-rule"
+  priority                   = 150
+  direction                  = "Inbound"
   access                     = "Allow"
   protocol                   = "*"
   source_port_range          = "*"
