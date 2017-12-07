@@ -16,8 +16,8 @@ variable "rg_name" {}
 variable "subnet_id" {}
 variable "master_sg_id" {}
 
-variable "api-lb_bp-id" {}
-variable "api_sg_id" {}
+#variable "api-lb_bp-id" {}
+#variable "api_sg_id" {}
 
 # Master nodes
 
@@ -61,28 +61,28 @@ resource "azurerm_network_interface" "master" {
   }
 }
 
-resource "azurerm_network_interface" "master-lb" {
-  name                      = "${var.cluster_name}-master-lb-ni-${count.index}"
-  location                  = "${var.region}"
-  resource_group_name       = "${var.rg_name}"
-  network_security_group_id = "${var.api_sg_id}"
-  count                     = "${var.count}"
+#resource "azurerm_network_interface" "master-lb" {
+#  name                      = "${var.cluster_name}-master-lb-ni-${count.index}"
+#  location                  = "${var.region}"
+#  resource_group_name       = "${var.rg_name}"
+#  network_security_group_id = "${var.api_sg_id}"
+#  count                     = "${var.count}"
 
-  ip_configuration {
-    name                          = "${var.cluster_name}-master-lb-ip-${count.index}"
-    subnet_id                     = "${var.subnet_id}"
-    private_ip_address_allocation = "dynamic"
-    load_balancer_backend_address_pools_ids = ["${var.api-lb_bp-id}"]
-    #load_balancer_inbound_nat_rules_ids = ["${element(azurerm_lb_nat_rule.winrm_nat.*.id, count.index)}"]
-  }
-}
+#  ip_configuration {
+#    name                          = "${var.cluster_name}-master-lb-ip-${count.index}"
+#    subnet_id                     = "${var.subnet_id}"
+#    private_ip_address_allocation = "dynamic"
+#    load_balancer_backend_address_pools_ids = ["${var.api-lb_bp-id}"]
+#    #load_balancer_inbound_nat_rules_ids = ["${element(azurerm_lb_nat_rule.winrm_nat.*.id, count.index)}"]
+#  }
+#}
 
 resource "azurerm_virtual_machine" "master" {
   name                  = "${var.cluster_name}-master-${count.index}"
   location              = "${var.region}"
   resource_group_name   = "${var.rg_name}"
-  network_interface_ids = ["${element(azurerm_network_interface.master.*.id, count.index)}", "${element(azurerm_network_interface.master-lb.*.id, count.index)}"]
-  #network_interface_ids = ["${element(azurerm_network_interface.master.*.id, count.index)}"]
+  #network_interface_ids = ["${element(azurerm_network_interface.master.*.id, count.index)}", "${element(azurerm_network_interface.master-lb.*.id, count.index)}"]
+  network_interface_ids = ["${element(azurerm_network_interface.master.*.id, count.index)}"]
   primary_network_interface_id = "${element(azurerm_network_interface.master.*.id, count.index)}"
   vm_size               = "${var.instance_type}"
   availability_set_id   = "${azurerm_availability_set.master.id}"

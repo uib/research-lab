@@ -41,13 +41,13 @@ module "resourcegroup" {
    region = "${var.region}"
 }
 
-module "loadbalancers" {
-   source = "../loadbalancer"
-   
-   region = "${var.region}"
-   rg_name = "${module.resourcegroup.rg_name}"
-   cluster_name = "${var.cluster_name}"
-}
+#module "loadbalancers" {
+#   source = "../loadbalancer"
+#   
+#   region = "${var.region}"
+#   rg_name = "${module.resourcegroup.rg_name}"
+#   cluster_name = "${var.cluster_name}"
+#}
 
 module "securitygroups" {
    source = "../securitygroups"
@@ -59,8 +59,8 @@ module "securitygroups" {
    tag_environment = "${var.tag_environment}"
    tag_activity = "${var.tag_activity}"
 
-   api-lb_pip = "${module.loadbalancers.api-lb_pip}"
-   web-lb_pip = "${module.loadbalancers.web-lb_pip}"
+   #api-lb_pip = "${module.loadbalancers.api-lb_pip}"
+   #web-lb_pip = "${module.loadbalancers.web-lb_pip}"
 
    allow_ssh_from_v4 = "${var.allow_ssh_from_v4}"
    allow_lb_from_v4 = "${var.allow_lb_from_v4}"
@@ -92,8 +92,8 @@ module "networks" {
    subnet_id = "${module.networks.azure_subnet_id}"
    master_sg_id = "${module.securitygroups.master_sg_id}"
 
-   api-lb_bp-id = "${module.loadbalancers.api-lb_bp-id}"
-   api_sg_id = "${module.securitygroups.api_sg_id}"
+   #api-lb_bp-id = "${module.loadbalancers.api-lb_bp-id}"
+   #api_sg_id = "${module.securitygroups.api_sg_id}"
    
    instance_type = "${var.master_instance_type}"
    image = "${var.coreos_image}"
@@ -117,8 +117,8 @@ module "networks" {
    subnet_id = "${module.networks.azure_subnet_id}"
    worker_sg_id = "${module.securitygroups.worker_sg_id}"
 
-   web-lb_bp-id = "${module.loadbalancers.web-lb_bp-id}"
-   web_sg_id = "${module.securitygroups.web_sg_id}"
+   #web-lb_bp-id = "${module.loadbalancers.web-lb_bp-id}"
+   #web_sg_id = "${module.securitygroups.web_sg_id}"
    
    instance_type = "${var.worker_instance_type}"
    image = "${var.coreos_image}"
