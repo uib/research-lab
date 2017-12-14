@@ -4,4 +4,4 @@ metadata:
   name: default-deny
   namespace: kube-system
 spec:
-  podSelector:
+  podSelector: {}
