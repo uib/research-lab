@@ -7,6 +7,9 @@ variable "keypair" {}
 variable "network" {}
 variable "sec_groups" { type = "list" }
 variable "availability_zone" {}
+variable "worker_volume_size" {}
+variable "worker_volume_name" {}
+variable "worker_volume_description" {}
 
 # Worker nodes
 resource "openstack_compute_instance_v2" "worker" {
@@ -32,7 +35,38 @@ resource "openstack_compute_instance_v2" "worker" {
         uuid = "${var.image}"
         #volume_size = 40
     }
+
+    timeouts {
+    create = "3m"
+    delete = "3m"
+  }
 }
+
+resource "openstack_blockstorage_volume_v2" "worker_volume" {
+  count       = "${var.count}"
+  region      = "${var.region}"
+  name        = "${var.worker_volume_name}-glusterfs-volume-${count.index}"
+  description = "${var.worker_volume_description}"
+  size        = "${var.worker_volume_size}"
+
+   timeouts {
+   create = "3m"
+   delete = "3m"
+ }
+}
+
+resource "openstack_compute_volume_attach_v2" "worker_volumes" {
+  count       = "${var.count}"
+  instance_id = "${element(openstack_compute_instance_v2.worker.*.id, count.index)}"
+  volume_id   = "${element(openstack_blockstorage_volume_v2.worker_volume.*.id, count.index)}"
+  device      =  "/dev/vdx"
+
+   timeouts {
+   create = "3m"
+   delete = "3m"
+ }
+}
+
 
 data "template_file" "workers_ansible" {
     template = "$${name} ansible_host=$${ip} lb=$${lb_flag}"

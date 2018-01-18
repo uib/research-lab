@@ -8,6 +8,7 @@ variable "master_count" {}
 variable "worker_count" {}
 variable "ingress_use_proxy_protocol" {}
 
+
 variable "default_ingress_use_proxy_protocol" {
     type = "string"
     default = "true"
@@ -29,8 +30,3 @@ variable "default_master_count" {
 variable "default_worker_count" {
     default = 4
 }
-
-
-
-
-

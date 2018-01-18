@@ -6,6 +6,9 @@ variable "cluster_name" {}
 variable "keypair" {}
 variable "network" {}
 variable "sec_groups" { type = "list" }
+variable "worker_volume_size" {}
+variable "worker_volume_name" {}
+variable "worker_volume_description" {}
 
 # Worker nodes
 resource "openstack_compute_floatingip_v2" "worker" {
@@ -42,6 +45,13 @@ resource "openstack_compute_floatingip_associate_v2" "worker" {
     count = "${var.count}"
     floating_ip = "${openstack_compute_floatingip_v2.worker.*.address[count.index]}"
     instance_id = "${openstack_compute_instance_v2.worker.*.id[count.index]}"
+}
+
+resource "openstack_blockstorage_volume_v2" "worker_volume" {
+  region      = "${var.region}"
+  name        = "${var.worker_volume_name}-glusterfs-volume-${count.index}"
+  description = "${var.worker_volume_description}"
+  size        = "${var.worker_volume_size}"
 }
 
 data "template_file" "workers_ansible" {

@@ -7,6 +7,9 @@ variable "keypair" {}
 variable "network" {}
 variable "sec_groups" { type = "list" }
 variable "availability_zone" {}
+variable "master_volume_size" {}
+variable "master_volume_name" {}
+variable "master_volume_description" {}
 
 # Master nodes
 resource "openstack_compute_instance_v2" "master" {

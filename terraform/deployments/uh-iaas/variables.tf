@@ -10,6 +10,13 @@ variable "node_flavor" {}
 variable "coreos_image" {}
 variable "network" {}
 variable "availability_zone" {}
+variable "worker_volume_size" {}
+variable "worker_volume_name" {}
+variable "worker_volume_description" {}
+variable "master_volume_size" {}
+variable "master_volume_name" {}
+variable "master_volume_description" {}
+
 
 # Cluster data, needs to be set in local.tfvars
 variable "cluster_name" {}
@@ -24,3 +31,6 @@ variable "ssh_public_key" { default = "" }
 variable "master_count" { default = 0 }
 variable "worker_count" { default = 0 }
 variable "ingress_use_proxy_protocol" { default = "" }
+variable "description" { default = "Test volume" }
+variable "name" { default = "volume_1" }
+variable "size" { default = 1 }

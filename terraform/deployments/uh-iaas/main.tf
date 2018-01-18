@@ -43,6 +43,12 @@ module "cluster" {
     master_count = "${module.global.master_count}"
     worker_count = "${module.global.worker_count}"
     ingress_use_proxy_protocol = "${module.global.ingress_use_proxy_protocol}"
+    worker_volume_description = "${var.master_volume_description}"
+    worker_volume_size = "${var.master_volume_size}"
+    worker_volume_name = "${var.master_volume_name}"
+    master_volume_description = "${var.master_volume_description}"
+    master_volume_size = "${var.master_volume_size}"
+    master_volume_name = "${var.master_volume_name}"
 }
 
 data "template_file" "inventory_tail" {

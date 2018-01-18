@@ -17,6 +17,13 @@ variable "ssh_public_key" { }
 variable "master_count" { }
 variable "worker_count" { }
 variable "ingress_use_proxy_protocol" {}
+variable "master_volume_size" {}
+variable "master_volume_name" {}
+variable "master_volume_description" {}
+variable "worker_volume_size" {}
+variable "worker_volume_name" {}
+variable "worker_volume_description" {}
+
 
 provider "openstack" {
     auth_url = "${var.auth_url}"
@@ -62,6 +69,10 @@ module "masters" {
     keypair = "${module.keypair.name}"
     network = "${module.networks.id}"
     sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.master}" ]
+    master_volume_description = "${var.master_volume_description}"
+    master_volume_size = "${var.master_volume_size}"
+    master_volume_name = "${var.master_volume_name}"
+
 }
 
 module "workers" {
@@ -75,4 +86,7 @@ module "workers" {
     keypair = "${module.keypair.name}"
     network = "${module.networks.id}"
     sec_groups = [ "default", "${module.securitygroups.ssh}", "${module.securitygroups.lb}" ]
+    worker_volume_description = "${var.worker_volume_description}"
+    worker_volume_size = "${var.worker_volume_size}"
+    worker_volume_name = "${var.worker_volume_name}"
 }
