@@ -24,6 +24,11 @@ variable "master_volume_description" {}
 variable "worker_volume_size" {}
 variable "worker_volume_name" {}
 variable "worker_volume_description" {}
+variable "allow_glusterfs_ssh_from_v4" { type = "list" }
+variable "allow_glusterfs_daemon_from_v4" { type = "list" }
+variable "allow_glusterfs_mgm_from_v4" { type = "list" }
+variable "allow_glusterfs_brick_from_v4" { type = "list" }
+
 
 provider "openstack" {
     auth_url = "${var.auth_url}"
@@ -49,6 +54,12 @@ module "securitygroups" {
     allow_ssh_from_v4 = "${var.allow_ssh_from_v4}"
     allow_lb_from_v4 = "${var.allow_lb_from_v4}"
     allow_api_access_from_v4 = "${var.allow_api_access_from_v4}"
+    allow_glusterfs_ssh_from_v4 = "${var.allow_glusterfs_ssh_from_v4}"
+    allow_glusterfs_daemon_from_v4 = "${var.allow_glusterfs_daemon_from_v4}"
+    allow_glusterfs_mgm_from_v4 = "${var.allow_glusterfs_mgm_from_v4}"
+    allow_glusterfs_brick_from_v4 = "${var.allow_glusterfs_brick_from_v4}"
+
+
 }
 
 module "masters" {

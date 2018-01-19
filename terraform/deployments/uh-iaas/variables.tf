@@ -16,7 +16,10 @@ variable "worker_volume_description" {}
 variable "master_volume_size" {}
 variable "master_volume_name" {}
 variable "master_volume_description" {}
-
+variable "allow_glusterfs_ssh_from_v4" { type = "list" }
+variable "allow_glusterfs_daemon_from_v4" { type = "list" }
+variable "allow_glusterfs_mgm_from_v4" { type = "list" }
+variable "allow_glusterfs_brick_from_v4" { type = "list" }
 
 # Cluster data, needs to be set in local.tfvars
 variable "cluster_name" {}

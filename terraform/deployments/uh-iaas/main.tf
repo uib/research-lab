@@ -49,6 +49,10 @@ module "cluster" {
     master_volume_description = "${var.master_volume_description}"
     master_volume_size = "${var.master_volume_size}"
     master_volume_name = "${var.master_volume_name}"
+    allow_glusterfs_ssh_from_v4 = "${var.allow_glusterfs_ssh_from_v4}"
+    allow_glusterfs_daemon_from_v4 = "${var.allow_glusterfs_daemon_from_v4}"
+    allow_glusterfs_mgm_from_v4 = "${var.allow_glusterfs_mgm_from_v4}"
+    allow_glusterfs_brick_from_v4 = "${var.allow_glusterfs_brick_from_v4}"
 }
 
 data "template_file" "inventory_tail" {

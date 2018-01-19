@@ -55,7 +55,7 @@ resource "openstack_compute_volume_attach_v2" "master_volumes" {
   region      = "${var.region}"
   instance_id = "${element(openstack_compute_instance_v2.master.*.id, count.index)}"
   volume_id   = "${element(openstack_blockstorage_volume_v2.master_volume.*.id, count.index)}"
-  device      =  "/dev/vdx"
+  //device      =  "/dev/vdx"
 
    timeouts {
    create = "3m"
