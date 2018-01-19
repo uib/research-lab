@@ -37,6 +37,32 @@ resource "openstack_compute_instance_v2" "master" {
     }
 }
 
+resource "openstack_blockstorage_volume_v2" "master_volume" {
+  count       = "${var.count}"
+  region      = "${var.region}"
+  name        = "${var.master_volume_name}-glusterfs-volume-${count.index}"
+  description = "${var.master_volume_description}"
+  size        = "${var.master_volume_size}"
+
+   timeouts {
+   create = "3m"
+   delete = "3m"
+ }
+}
+
+resource "openstack_compute_volume_attach_v2" "master_volumes" {
+  count       = "${var.count}"
+  region      = "${var.region}"
+  instance_id = "${element(openstack_compute_instance_v2.master.*.id, count.index)}"
+  volume_id   = "${element(openstack_blockstorage_volume_v2.master_volume.*.id, count.index)}"
+  device      =  "/dev/vdx"
+
+   timeouts {
+   create = "3m"
+   delete = "3m"
+ }
+}
+
 data "template_file" "masters_ansible" {
     template = "$${name} ansible_host=$${ip} public_ip=$${ip}"
     count = "${var.count}"
