@@ -1,0 +1,8 @@
+- name: Install glusterfs
+  hosts: masters:workers
+  connection: local
+  become: false
+  vars_files:
+  - vars.yaml
+  roles:
+  - glusterfs

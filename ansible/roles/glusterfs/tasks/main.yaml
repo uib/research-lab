@@ -1,0 +1,4 @@
+- name: Install glusterfs-fuse
+  yum:
+    name: glusterfs-fuse
+    state: latest
