@@ -35,6 +35,12 @@ resource "openstack_compute_instance_v2" "master" {
         destination_type = "local"
         uuid = "${var.image}"
     }
+
+    timeouts {
+    create = "3m"
+    update = "3m"
+    delete = "3m"
+  }
 }
 
 resource "openstack_blockstorage_volume_v2" "master_volume" {

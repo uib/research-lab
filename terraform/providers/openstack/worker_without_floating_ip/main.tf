@@ -38,6 +38,7 @@ resource "openstack_compute_instance_v2" "worker" {
 
     timeouts {
     create = "3m"
+    update = "3m"
     delete = "3m"
   }
 }
